@@ -249,12 +249,41 @@ int deleteLeafNode(Node* head, int key)
 
 Node* searchRecursive(Node* ptr, int key)
 {
-
+	if(!ptr)
+	{
+		return NULL;
+	}
+	if(key == ptr->key)
+	{
+		return ptr;
+	}
+	if(key < ptr->key)
+	{
+		return searchRecursive(ptr->left, key);
+	}
+	return searchRecursive(ptr->right, key);
 }
 
 Node* searchIterative(Node* head, int key)
 {
+	Node *temp = head->left;
 
+	while(temp)
+	{
+		if(key == temp->key)
+		{
+			return temp;
+		}
+		if(key < temp->key)
+		{
+			temp = temp->left;
+		}
+		else
+		{
+			temp = temp->right;
+		}
+	}
+	return NULL;
 }
 
 
