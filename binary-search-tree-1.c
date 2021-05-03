@@ -129,23 +129,42 @@ int initializeBST(Node** h) {
 
 void inorderTraversal(Node* ptr)
 {
-
+	if(ptr)
+	{
+		inorderTraversal(ptr->left);
+		printf(" %d ", ptr->key);
+		inorderTraversal(ptr->right);
+		return;
+	}
 }
 
 void preorderTraversal(Node* ptr)
 {
-
+	if(ptr)
+	{
+		printf(" %d ", ptr->key);
+		preorderTraversal(ptr->left);
+		preorderTraversal(ptr->right);
+		return;
+	}
 }
 
 void postorderTraversal(Node* ptr)
 {
-
+	if(ptr)
+	{
+		postorderTraversal(ptr->left);
+		postorderTraversal(ptr->right);
+		printf(" %d ", ptr->key);
+		return;
+	}
 }
 
 
 int insert(Node* head, int key)
 {
-	Node* temp = head;
+	Node* temp = head->left;
+	Node* parent;
 	Node *newnode = (Node*)malloc(sizeof(Node));
 	newnode->key = key;
 	newnode->left = NULL;
@@ -157,34 +176,75 @@ int insert(Node* head, int key)
 		return 1;
 	}
 
-	while(temp->left != NULL)
+	while(temp != NULL)
 	{
-		temp = temp->left;
-
 		if(newnode->key > temp->key)
 		{
-			newnode->right = temp->right;
-			temp->right = newnode;
-			return 1;
+			parent = temp;
+			temp = temp->right;
 		}
 		else if(newnode->key < temp->key)
 		{
-			if(newnode->key > temp->left->key)
-			{
-				newnode->left = temp->left;
-				temp->left = newnode;
-				return 1;
-			}
+			parent = temp;
+			temp = temp->left;
 		}
 	}
 
-	temp->left = newnode;
-	return 1;
+	if(newnode->key < parent->key)
+	{
+		parent->left = newnode;
+		return 1;
+	}
+	else
+	{
+		parent->right = newnode;
+		return 1;
+	}
 }
 
 int deleteLeafNode(Node* head, int key)
 {
+	Node *temp = head->left;
+	Node *parent;
 
+	if(head->left == NULL)
+	{
+		printf("삭제할 리프 노드가 없습니다.\n\n");
+		return 1;
+	}
+
+	while((temp != NULL) && (temp->key != key))
+	{
+		if(key < temp->key)
+		{
+			parent = temp;
+			temp = temp->left;
+		}
+		else if(key > temp->key)
+		{
+			parent = temp;
+			temp = temp->right;
+		}
+	}
+
+	if((temp->left != NULL) || (temp->right != NULL))
+	{
+		printf("리프 노드가 아닙니다.\n\n");
+		return 1;
+	}
+	else
+	{
+		if(parent->left == temp)
+		{
+			parent->left = NULL;
+			return 1;
+		}
+		else if(parent->right == temp)
+		{
+			parent->right = NULL;
+			return 1;
+		}
+	}
 }
 
 Node* searchRecursive(Node* ptr, int key)
